@@ -1,0 +1,41 @@
+02/09/2019: first lecture data science
+* we already found the group and thought about the topic
+* since some of us were on a hill near helsinki the weekend before, to see northern lights
+    the idea for the project came quickly 
+* we thought about other topics, but finally kept the topic
+* one of us volunteered for requesting access to twitter data (Logan)
+
+09/09/2019: first exercise session
+* we thought about the realisation of the project
+    - project structure, how to reach the end-user
+    - data sources: mainly twitter
+    - what to do we have or want to archive and remember to do
+    - maybe another Twitter access request, so we prolong/ increase our possibilities
+* set-up of a github project for the webpage, so that we all can work on the code (Luise)
+
+10/09/2019: first porper team meeting
+* we searched for databases
+* twitter data fetching is pretty limited
+* we searched for alternative data, from with we can conclude to northern lights
+* we thought, that weather data is reasonable to take into account
+* we researched a bit for meterological data and indicators (as sunwinds, particle stream, athmospheric conditions, ..)
+    , but recognized, that we don't have the expertise distinguish between all those parameters
+* also: it seems not do be directly possible to calculate northern lights
+* we defined, that we want to use
+    weather data (clouds, vidibility) from FMI,
+    k-index as it represents solar radiation by their magnetic effect from a public accessible database,
+    twitter for further validation, precision, images, information e.g. location
+    
+* set-up overleaf for working on our final report(Vincent)
+
+15/09/2019
+* description of the prject's outline and further work on the webpage (set-up backend) (Luise)
+
+TODOs:
+* set-up database (sqlite)
+* collect data
+* storing in database
+* preprocess data 
+* set-up python backend
+* set-up data-connection between python backend and db
+* set-up connection between db, webapp-backend, and webapp-frontend
