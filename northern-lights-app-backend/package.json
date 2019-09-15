@@ -1,0 +1,15 @@
+{
+  "name": "northern-lights-app-backend",
+  "version": "1.0.0",
+  "description": "This is the Backend for the Northern Lights App",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Luise",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
