@@ -3,12 +3,18 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { MatCardModule } from '@angular/material';
+import { LineChartComponent } from './line-chart/line-chart.component'
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    DashboardComponent,
+    LineChartComponent
   ],
   imports: [
+    MatCardModule,
     BrowserModule,
     AppRoutingModule
   ],
