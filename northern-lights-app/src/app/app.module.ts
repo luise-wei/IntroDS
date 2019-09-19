@@ -4,7 +4,9 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import {MatButtonModule} from '@angular/material/button';
 import { MatCardModule } from '@angular/material';
+import { MatDividerModule } from '@angular/material/divider';
 import { LineChartComponent } from './line-chart/line-chart.component'
 
 @NgModule({
@@ -14,7 +16,9 @@ import { LineChartComponent } from './line-chart/line-chart.component'
     LineChartComponent
   ],
   imports: [
+    MatButtonModule,
     MatCardModule,
+    MatDividerModule,
     BrowserModule,
     AppRoutingModule
   ],

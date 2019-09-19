@@ -1,0 +1,43 @@
+.header{
+    font-family: 'Playfair Display', serif; 
+}
+
+.header2{
+    font-family: 'Amatic SC', cursive;
+}
+
+.header3{    
+    font-family: 'Permanent Marker', cursive;
+    font-size: 25px;
+    text-align: center;
+}
+
+.header4{
+    font-family: 'Poiret One', cursive;
+}
+
+.example-card {
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-bottom: 20px;
+}
+
+/* .charts-container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.left-chart {
+    width: 40%;
+    padding-left: 5%;
+    padding-right: 5%;
+}
+
+.right-chart {
+    width: 40%;
+    padding-left: 5%;
+    padding-right: 5%;
+} */

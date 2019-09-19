@@ -1,13 +1,45 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <title>NorthernLightsApp</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link href="https://fonts.googleapis.com/css?family=Amatic+SC|Chilanka|Coming+Soon|
+    Dancing+Script|Lobster|Muli|Permanent+Marker|Playfair+Display|Poiret+One|
+    Rock+Salt&display=swap" rel="stylesheet">
+  <style>
+    .app-container {
+      background: rgb(0, 19, 47);
+      background-image: linear-gradient(to top right,
+          rgba(0, 19, 47, 1) 15%, rgba(14, 49, 73, 1) 40%, rgba(99, 174, 95, 1) 100%);
+    }
+
+    .footer {
+      font-family: 'Poiret One', cursive;
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      background-color: lightcyan;
+      color: rgba(0, 19, 47, 1);
+      text-align: center;
+      /* opacity:0.4; */
+    }
+  </style>
 </head>
-<body>
+
+<body class="app-container">
   <app-root></app-root>
 </body>
+
+<footer class="footer">
+  Northern Lights App was developed during the course 'Introduction to Data Science' of Teemu Roos at Helsinki University in the autumn 2019.
+  <a href="https://github.com/luise-wei/IntroDS" target="View on GitHub" rel="noopener">
+    <svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" fill="#1976d2"/><path d="M0 0h24v24H0z" fill="none"/></svg>
+  </a>
+</footer>
+
 </html>
