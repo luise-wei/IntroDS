@@ -2,6 +2,7 @@
 
 var express = require('express');
 const app = express();// Allow any method from any host and log requests
+var data = require('./routes/sqliteAPI');
 
 app.use((req, res, next) => {
         res.header('Access-Control-Allow-Origin', '*');
@@ -22,6 +23,8 @@ app.use(express.json()),
 app.get('/', (req, res) => {
     res.send({hello: 'world'});
 });
+
+app.use('/data', data);
 
 // start our server on port 3000
 app.listen(3000, function() {
