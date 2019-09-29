@@ -6,10 +6,10 @@
 #
 #                   2010 Daily Geomagnetic Data
 #
-
-                 Middle Latitude        High Latitude            Estimated
-               - Fredericksburg -     ---- College ----      --- Planetary ---
-   Date        A     K-indices        A     K-indices        A     K-indices
+#
+#                Middle Latitude        High Latitude            Estimated
+#              - Fredericksburg -     ---- College ----      --- Planetary ---
+#  Date        A     K-indices        A     K-indices        A     K-indices
 2010 01 01     2  0 0 0 0 0 1 1 2     0  0 0 0 0 0 0 0 0     1  1 0 0 0 0 0 3 1
 2010 01 02     1  0 0 0 0 0 2 1 0     0  0 0 0 0 0 0 0 0     0  0 0 0 0 0 0 0 1
 2010 01 03     3  0 1 1 2 2 1 0 0     4  0 0 0 3 3 1 0 0     3  0 1 1 2 2 0 0 0
