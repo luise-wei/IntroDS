@@ -2,14 +2,70 @@ import pandas as pd
 #import Datapoint as dp
 import re
 
+import sqlite3
+from sqlite3 import Error
 
-class Importer():
-    
+
+class Importer:
 
     def __init__(self):
         self.df = None
         self.completed = False
         self.df = None
+
+    def create_connection(self, db_file):
+        conn = None
+        try:
+            conn = sqlite3.connect(db_file, isolation_level=None)
+            print(sqlite3.version)
+        except Error as e:
+            print(e)
+
+        return conn
+        # finally:
+        #     if conn:
+        #         conn.close()
+
+    def create_table(self, cursor, create_table_sql):
+        """"
+        :param conn: Connection object
+        :param create_table_sql: a CREATE TABLE statement
+        :return:
+        """
+        try:
+            cursor.execute(create_table_sql)
+        except Error as e:
+            print(e)
+
+    def create_insert_data(self, cursor, data):
+        """
+        Create a new data entry into the import_data table
+        :param connection:
+        :param data:
+        :return: data id
+        """
+        sql = ''' INSERT INTO import_data(test1_Year,test1_m,test1_d,test1_Time,test1_Cloud,test1_Horizontal,Fredericksburg,College,Planetary)
+                      VALUES(?,?,?,?,?,?,?,?,?)'''
+        cursor.execute(sql, data)
+        return cursor.lastrowid
+
+    def insert_all(self, connection):
+        self.df = self.df.fillna(-1)
+
+        for index, row in self.df.iterrows():
+            data = []
+            data.append(row['test1_Year'])
+            data.append(row['test1_m'])
+            data.append(row['test1_d'])
+            data.append(row['test1_Time'])
+            data.append(row['test1_Cloud amount (1/8)'])
+            data.append(row['test1_Horizontal visibility (m)'])
+            data.append(row['Fredericksburg'])
+            data.append(row['College'])
+            data.append(row['Planetary'])
+            data = tuple(data)
+            ide = self.create_insert_data(connection, data)
+            print(ide)
 
     def import_all(self, weather_paths, k_index_paths):
         ''' Main importer for the data '''
@@ -18,6 +74,9 @@ class Importer():
         self.completed = True
         print(self.completed)
         print(self.df.head())
+        # print(self.df.columns)
+        print(self.df.dtypes)
+        # print(self.df.iloc[1])
 
     def __import_weather(self, path):
         ''' Import data from a weather station in csv '''
@@ -35,7 +94,7 @@ class Importer():
         while i < len(df.columns):
             indexes[df.columns[i]] = path + '_' + df.columns[i]
             i += 1
-        
+
         return df.rename(columns = indexes)
 
     def __import_kIndex(self, path):
@@ -68,7 +127,7 @@ class Importer():
             year = int(elem[:4])
             month = int(elem[5:7])
             day = int(elem[8:10])
-            
+
             k1 = list(map(int, re.split(' |-', elem[18:33])))
             k2 = list(map(int, re.split(' |-', elem[41:56])))
             k3 = list(map(int, re.split(' |-', elem[64:79])))
@@ -121,5 +180,22 @@ class Importer():
 
 
 x = Importer()
+sql_create_table = """ CREATE TABLE IF NOT EXISTS import_data (
+                                        id integer PRIMARY KEY,
+                                        test1_Year integer NOT NULL,
+                                        test1_m integer  NOT NULL,
+                                        test1_d integer NOT NULL,
+                                        test1_Time integer NOT NULL,
+                                        test1_Cloud float NOT NULL,
+                                        test1_Horizontal float NOT NULL,
+                                        Fredericksburg integer NOT NULL,
+                                        College integer NOT NULL,
+                                        Planetary integer NOT NULL
+                                    ); """
+
+conn = x.create_connection(r"db/ds_project.db")
+cursor = conn.cursor()
+x.create_table(cursor, sql_create_table)
 x.import_all(['test1.csv'], ['2017_DGD.txt', '2018_DGD.txt'])
-#print(x.df.Time)
+x.insert_all(cursor)
+# print(x.df.Time)
