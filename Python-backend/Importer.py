@@ -1,15 +1,15 @@
 import pandas as pd
 #import Datapoint as dp
 import re
+import sqlite3
 
 
 class Importer():
-    
 
     def __init__(self):
         self.df = None
         self.completed = False
-        self.df = None
+        self.db_name = "test"
 
     def import_all(self, weather_paths, k_index_paths):
         ''' Main importer for the data '''
@@ -100,9 +100,10 @@ class Importer():
 
         #print(df.shape)
         #print(len(k1))
-        df['Fredericksburg'] = k1
+        # Only College as it's the station in the north
+        #df['Fredericksburg'] = k1
         df['College'] = k2
-        df['Planetary'] = k3
+        #df['Planetary'] = k3
 
         return df
 
@@ -133,8 +134,28 @@ class Importer():
 
         return self.__to_dataframe(results, df)
 
+    def __make_Validation(self, df):
+
+        weather_Condition = []
+        northern_light = []
+
+        for index, row in df.iterrows():
+            if row['College'] >= 3:
+                northern_light.append(1) #True/False for Aurora
+            else:
+                northern_light.append(0)
+            
+            
+
+        return df
+
     def to_json(self, path):        
         self.df.to_json(path)
+
+    def to_sql(self):
+        conn = sqlite3.connect(self.db_name)
+        self.df.to_sql("data", conn, if_exists="replace")
+        conn.close()
 
 
 x = Importer()
@@ -142,4 +163,4 @@ space_files = ['2010_DGD.txt', '2011_DGD.txt', '2012_DGD.txt', '2013_DGD.txt', '
 weather_files = ['Inari Nellim.csv', 'Rovaniemi Lentoasema.csv', 'Ranua lentokentta.csv', 'Vantaa Lentoasema.csv']
 x.import_all(weather_files, space_files)
 x.to_json('Datafile.json')
-#print(x.df.Time)
+print(x.df.columns)
