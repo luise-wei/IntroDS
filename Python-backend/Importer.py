@@ -2,13 +2,9 @@ import pandas as pd
 #import Datapoint as dp
 import re
 import sqlite3
-#from sqlalchemy import create_engine
-#engine = create_engine('sqlite://', echo=False)
-
-import sqlite3
 from sqlite3 import Error
 
-class Importer:
+class Importer():
 
     def __init__(self):
         self.df = None
@@ -37,7 +33,6 @@ class Importer:
         print(self.df.head())
         print(self.df.dtypes)
 
-                
     def __import_weather(self, path, first=False):
         ''' Import data from a weather station in csv '''
 
@@ -60,6 +55,7 @@ class Importer:
                 i += 1
             
             return df.rename(columns = indexes)
+
         except:
             print(path)
 
@@ -179,7 +175,6 @@ class Importer:
 
 
 x = Importer()
-
 space_files = ['2010_DGD.txt', '2011_DGD.txt', '2012_DGD.txt', '2013_DGD.txt', '2014_DGD.txt', '2015_DGD.txt', '2016_DGD.txt']#, '2017_DGD.txt', '2018_DGD.txt']
 weather_files = ['Inari Nellim.csv', 'Rovaniemi Lentoasema.csv', 'Ranua lentokentta.csv', 'Vantaa Lentoasema.csv']
 x.import_all(weather_files, space_files)
