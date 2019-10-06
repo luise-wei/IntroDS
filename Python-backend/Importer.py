@@ -1,17 +1,19 @@
 import pandas as pd
 #import Datapoint as dp
 import re
+import sqlite3
+#from sqlalchemy import create_engine
+#engine = create_engine('sqlite://', echo=False)
 
 import sqlite3
 from sqlite3 import Error
-
 
 class Importer:
 
     def __init__(self):
         self.df = None
         self.completed = False
-        self.df = None
+        self.db_name = "db/ds_project.db"
 
     def create_connection(self, db_file):
         conn = None
@@ -26,47 +28,6 @@ class Importer:
         #     if conn:
         #         conn.close()
 
-    def create_table(self, cursor, create_table_sql):
-        """"
-        :param conn: Connection object
-        :param create_table_sql: a CREATE TABLE statement
-        :return:
-        """
-        try:
-            cursor.execute(create_table_sql)
-        except Error as e:
-            print(e)
-
-    def create_insert_data(self, cursor, data):
-        """
-        Create a new data entry into the import_data table
-        :param connection:
-        :param data:
-        :return: data id
-        """
-        sql = ''' INSERT INTO import_data(test1_Year,test1_m,test1_d,test1_Time,test1_Cloud,test1_Horizontal,Fredericksburg,College,Planetary)
-                      VALUES(?,?,?,?,?,?,?,?,?)'''
-        cursor.execute(sql, data)
-        return cursor.lastrowid
-
-    def insert_all(self, connection):
-        self.df = self.df.fillna(-1)
-
-        for index, row in self.df.iterrows():
-            data = []
-            data.append(row['test1_Year'])
-            data.append(row['test1_m'])
-            data.append(row['test1_d'])
-            data.append(row['test1_Time'])
-            data.append(row['test1_Cloud amount (1/8)'])
-            data.append(row['test1_Horizontal visibility (m)'])
-            data.append(row['Fredericksburg'])
-            data.append(row['College'])
-            data.append(row['Planetary'])
-            data = tuple(data)
-            ide = self.create_insert_data(connection, data)
-            print(ide)
-
     def import_all(self, weather_paths, k_index_paths):
         ''' Main importer for the data '''
         self.df = self.__load_all_weather(weather_paths) #self.__import_weather('Weather\\' + weather_paths[0])
@@ -74,40 +35,49 @@ class Importer:
         self.completed = True
         print(self.completed)
         print(self.df.head())
-        # print(self.df.columns)
         print(self.df.dtypes)
-        # print(self.df.iloc[1])
 
-    def __import_weather(self, path):
+                
+    def __import_weather(self, path, first=False):
         ''' Import data from a weather station in csv '''
 
-        df = pd.read_csv("Weather\\" + path)
-        df = df.drop('Time zone', axis = 1)
-        df = self.__replace(df, 'Time')
-        df = df[df.Time.isin([0, 3, 6, 9, 12, 15, 18, 21])] #Time of the k Index messurement
-        #rename columns
-        path = path.split('.')[0]
+        try:
+            df = pd.read_csv("Weather\\" + path)
+            df = df.drop('Time zone', axis = 1)
+            df = self.__replace(df, 'Time')
+            df = df[df.Time.isin([0, 3, 6, 9, 12, 15, 18, 21])] #Time of the k Index messurement
+            #rename columns
+            path = path.split('.')[0]
 
-        i = 0
-        indexes = {}
+            if(not first):
+                df = df.drop(columns=['Year', 'm', 'd', 'Time'])
 
-        while i < len(df.columns):
-            indexes[df.columns[i]] = path + '_' + df.columns[i]
-            i += 1
+            i = 0
+            indexes = {}
 
-        return df.rename(columns = indexes)
+            while i < len(df.columns):
+                indexes[df.columns[i]] = path + '_' + df.columns[i]
+                i += 1
+            
+            return df.rename(columns = indexes)
+        except:
+            print(path)
 
     def __import_kIndex(self, path):
         ''' Import  '''
 
-        data = open('GeoData\\' + path).read().split('\n')
-        data.remove('')
-        data = list(filter(lambda x: x[0].isdigit(), data))
+        try:
+            data = open('GeoData\\' + path).read().split('\n')
+            data.remove('')
+            data = list(filter(lambda x: x[0].isdigit(), data))
 
-        result = self.__parse_data(data)
-        #df = self.__to_dataframe(result, df)
+            result = self.__parse_data(data)
+            #df = self.__to_dataframe(result, df)
 
-        return result
+            return result
+
+        except:
+            print(path)
 
     def __replace(self, df, cat):
         ''' replace object values with numerical '''
@@ -148,12 +118,12 @@ class Importer:
              k2.extend(elem[4])
              k3.extend(elem[5])
 
-        print(df)
-        print(df.shape)
-        print(len(k1))
-        df['Fredericksburg'] = k1
+        #print(df.shape)
+        #print(len(k1))
+        # Only College as it's the station in the north
+        #df['Fredericksburg'] = k1
         df['College'] = k2
-        df['Planetary'] = k3
+        #df['Planetary'] = k3
 
         return df
 
@@ -161,9 +131,15 @@ class Importer:
         ''' Loads multiple weather files '''
 
         frames = []
+        first = True
 
         for path in path_list:
-            frames.append(self.__import_weather(path))
+            if first:
+                first = False
+                frames.append(self.__import_weather(path, first=True))
+            
+            else:
+                frames.append(self.__import_weather(path))
 
         df = pd.concat(frames, axis=1, sort=True)
         return df
@@ -178,24 +154,36 @@ class Importer:
 
         return self.__to_dataframe(results, df)
 
+    def __make_Validation(self, df):
+
+        weather_Condition = []
+        northern_light = []
+
+        for index, row in df.iterrows():
+            if row['College'] >= 3:
+                northern_light.append(1) #True/False for Aurora
+            else:
+                northern_light.append(0)
+            
+            
+
+        return df
+
+    def to_json(self, path):        
+        self.df.to_json(path)
+
+    def to_sql(self):
+        conn = sqlite3.connect(self.db_name)
+        self.df.to_sql("data", conn, if_exists="replace")
+        conn.close()
+
 
 x = Importer()
-sql_create_table = """ CREATE TABLE IF NOT EXISTS import_data (
-                                        id integer PRIMARY KEY,
-                                        test1_Year integer NOT NULL,
-                                        test1_m integer  NOT NULL,
-                                        test1_d integer NOT NULL,
-                                        test1_Time integer NOT NULL,
-                                        test1_Cloud float NOT NULL,
-                                        test1_Horizontal float NOT NULL,
-                                        Fredericksburg integer NOT NULL,
-                                        College integer NOT NULL,
-                                        Planetary integer NOT NULL
-                                    ); """
 
-conn = x.create_connection(r"db/ds_project.db")
-cursor = conn.cursor()
-x.create_table(cursor, sql_create_table)
-x.import_all(['test1.csv'], ['2017_DGD.txt', '2018_DGD.txt'])
-x.insert_all(cursor)
-# print(x.df.Time)
+space_files = ['2010_DGD.txt', '2011_DGD.txt', '2012_DGD.txt', '2013_DGD.txt', '2014_DGD.txt', '2015_DGD.txt', '2016_DGD.txt']#, '2017_DGD.txt', '2018_DGD.txt']
+weather_files = ['Inari Nellim.csv', 'Rovaniemi Lentoasema.csv', 'Ranua lentokentta.csv', 'Vantaa Lentoasema.csv']
+x.import_all(weather_files, space_files)
+
+x.to_sql()
+x.to_json('Datafile.json')
+print(x.df.columns)
