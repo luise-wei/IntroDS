@@ -15,6 +15,7 @@ class Importer():
         ''' Main importer for the data '''
         self.df = self.__load_all_weather(weather_paths) #self.__import_weather('Weather\\' + weather_paths[0])
         self.df = self.__load_all_kIndex(k_index_paths, self.df)
+        self.df = self.__make_Validation(self.df)
         self.completed = True
                 
     def __import_weather(self, path, first=False):
@@ -136,16 +137,30 @@ class Importer():
 
     def __make_Validation(self, df):
 
-        weather_Condition = []
+        weather_Condition = [[], [], [], []]
         northern_light = []
+        stations = ['Inari Nellim', 'Rovaniemi Lentoasema', 'Ranua lentokentta', 'Vantaa Lentoasema']
 
         for index, row in df.iterrows():
             if row['College'] >= 3:
                 northern_light.append(1) #True/False for Aurora
             else:
                 northern_light.append(0)
-            
-            
+
+            counter = 0
+
+            for name in stations:
+                if row[name + '_Cloud amount (1/8)'] < 5 and row[name + '_Horizontal visibility (m)'] > 500.0:
+                    weather_Condition[counter].append(1)
+                else:
+                    weather_Condition[counter].append(0)
+
+                counter += 1
+
+        for i in range(len(stations)):
+            df[stations[i]] = weather_Condition[i]
+        
+        df['Lights'] = northern_light
 
         return df
 
@@ -156,11 +171,11 @@ class Importer():
         conn = sqlite3.connect(self.db_name)
         self.df.to_sql("data", conn, if_exists="replace")
         conn.close()
-
-
+    
 x = Importer()
 space_files = ['2010_DGD.txt', '2011_DGD.txt', '2012_DGD.txt', '2013_DGD.txt', '2014_DGD.txt', '2015_DGD.txt', '2016_DGD.txt']#, '2017_DGD.txt', '2018_DGD.txt']
 weather_files = ['Inari Nellim.csv', 'Rovaniemi Lentoasema.csv', 'Ranua lentokentta.csv', 'Vantaa Lentoasema.csv']
 x.import_all(weather_files, space_files)
 x.to_json('Datafile.json')
 print(x.df.columns)
+print(x.df.head())
