@@ -10,6 +10,7 @@ class Importer():
         self.df = None
         self.completed = False
         self.db_name = "db/ds_project.db"
+        self.stations = ['Inari Nellim', 'Rovaniemi Lentoasema', 'Ranua lentokentta', 'Vantaa Lentoasema']
 
     def create_connection(self, db_file):
         conn = None
@@ -30,9 +31,6 @@ class Importer():
         self.df = self.__load_all_kIndex(k_index_paths, self.df)
         self.df = self.__make_Validation(self.df)
         self.completed = True
-        print(self.completed)
-        print(self.df.head())
-        print(self.df.dtypes)
 
     def __import_weather(self, path, first=False):
         ''' Import data from a weather station in csv '''
@@ -45,6 +43,12 @@ class Importer():
             #rename columns
             path = path.split('.')[0]
 
+            mean = df['Horizontal visibility (m)'].mean()
+            mode = df['Cloud amount (1/8)'].mode()
+
+            df['Cloud amount (1/8)'] = df['Cloud amount (1/8)'].apply(lambda x: float(mode) if pd.isnull(x) else x)
+            df['Horizontal visibility (m)'] = df['Horizontal visibility (m)'].apply(lambda x: mean if pd.isnull(x) else x).round(0)
+        
             if(not first):
                 df = df.drop(columns=['Year', 'm', 'd', 'Time'])
 
@@ -155,7 +159,6 @@ class Importer():
 
         weather_Condition = [[], [], [], []]
         northern_light = []
-        stations = ['Inari Nellim', 'Rovaniemi Lentoasema', 'Ranua lentokentta', 'Vantaa Lentoasema']
 
         for index, row in df.iterrows():
             if row['College'] >= 3:
@@ -165,7 +168,7 @@ class Importer():
 
             counter = 0
 
-            for name in stations:
+            for name in self.stations:
                 if row[name + '_Cloud amount (1/8)'] < 5 and row[name + '_Horizontal visibility (m)'] > 500.0:
                     weather_Condition[counter].append(1)
                 else:
@@ -173,8 +176,8 @@ class Importer():
 
                 counter += 1
 
-        for i in range(len(stations)):
-            df[stations[i]] = weather_Condition[i]
+        for i in range(len(self.stations)):
+            df[self.stations[i]] = weather_Condition[i]
         
         df['Lights'] = northern_light
 
@@ -188,11 +191,11 @@ class Importer():
         self.df.to_sql("data", conn, if_exists="replace")
         conn.close()
     
-x = Importer()
+'''x = Importer()
 space_files = ['2010_DGD.txt', '2011_DGD.txt', '2012_DGD.txt', '2013_DGD.txt', '2014_DGD.txt', '2015_DGD.txt', '2016_DGD.txt']#, '2017_DGD.txt', '2018_DGD.txt']
 weather_files = ['Inari Nellim.csv', 'Rovaniemi Lentoasema.csv', 'Ranua lentokentta.csv', 'Vantaa Lentoasema.csv']
 x.import_all(weather_files, space_files)
 
-x.to_sql()
-x.to_json('Datafile.json')
-print(x.df.columns)
+#x.to_sql()
+#x.to_json('Datafile.json')
+print(x.df.head())'''
