@@ -158,28 +158,38 @@ class Importer():
     def __make_Validation(self, df):
 
         weather_Condition = [[], [], [], []]
+        overall_Condition = [[], [], [], []]
         northern_light = []
 
         for index, row in df.iterrows():
+
+            lights = None
             if row['College'] >= 3:
-                northern_light.append(1) #True/False for Aurora
+                lights = 1 #True/False for Aurora
             else:
-                northern_light.append(0)
+                lights = 0
 
             counter = 0
+            northern_light.append(lights)
 
             for name in self.stations:
                 if row[name + '_Cloud amount (1/8)'] < 5 and row[name + '_Horizontal visibility (m)'] > 500.0:
                     weather_Condition[counter].append(1)
+                    if lights == 1:
+                        overall_Condition[counter].append(1)
+                    else:
+                        overall_Condition[counter].append(0)
                 else:
                     weather_Condition[counter].append(0)
+                    overall_Condition[counter].append(2) #weather may change
 
                 counter += 1
 
         for i in range(len(self.stations)):
             df[self.stations[i]] = weather_Condition[i]
+            df[self.stations[i] + ' Overall'] = overall_Condition[i]
         
-        df['Lights'] = northern_light
+        #df['Lights'] = northern_light
 
         return df
 
@@ -188,7 +198,7 @@ class Importer():
 
     def to_sql(self):
         conn = sqlite3.connect(self.db_name)
-        self.df.to_sql("data", conn, if_exists="replace")
+        self.df.to_sql("rawData", conn, if_exists="replace")
         conn.close()
     
 '''x = Importer()
