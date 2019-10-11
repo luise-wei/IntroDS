@@ -46,9 +46,9 @@ class Importer():
             mean = df['Horizontal visibility (m)'].mean()
             mode = df['Cloud amount (1/8)'].mode()
 
-            df['Cloud amount (1/8)'] = df['Cloud amount (1/8)'].apply(lambda x: float(mode) if pd.isnull(x) else x)
+            df['Cloud amount (1/8)'] = df['Cloud amount (1/8)'].apply(lambda x: float(mode) if pd.isnull(x) or x>8 else x)
             df['Horizontal visibility (m)'] = df['Horizontal visibility (m)'].apply(lambda x: mean if pd.isnull(x) else x).round(0)
-        
+
             if(not first):
                 df = df.drop(columns=['Year', 'm', 'd', 'Time'])
 
@@ -58,7 +58,7 @@ class Importer():
             while i < len(df.columns):
                 indexes[df.columns[i]] = path + '_' + df.columns[i]
                 i += 1
-            
+
             return df.rename(columns = indexes)
 
         except:
@@ -138,7 +138,7 @@ class Importer():
             if first:
                 first = False
                 frames.append(self.__import_weather(path, first=True))
-            
+
             else:
                 frames.append(self.__import_weather(path))
 
@@ -181,31 +181,31 @@ class Importer():
                         overall_Condition[counter].append(0)
                 else:
                     weather_Condition[counter].append(0)
-                    overall_Condition[counter].append(2) #weather may change
+                    overall_Condition[counter].append(0) #weather may change
 
                 counter += 1
 
         for i in range(len(self.stations)):
             df[self.stations[i]] = weather_Condition[i]
             df[self.stations[i] + ' Overall'] = overall_Condition[i]
-        
+
         #df['Lights'] = northern_light
 
         return df
 
-    def to_json(self, path):        
+    def to_json(self, path):
         self.df.to_json(path)
 
     def to_sql(self):
         conn = sqlite3.connect(self.db_name)
         self.df.to_sql("rawData", conn, if_exists="replace")
         conn.close()
-    
+
 '''x = Importer()
 space_files = ['2010_DGD.txt', '2011_DGD.txt', '2012_DGD.txt', '2013_DGD.txt', '2014_DGD.txt', '2015_DGD.txt', '2016_DGD.txt']#, '2017_DGD.txt', '2018_DGD.txt']
 weather_files = ['Inari Nellim.csv', 'Rovaniemi Lentoasema.csv', 'Ranua lentokentta.csv', 'Vantaa Lentoasema.csv']
 x.import_all(weather_files, space_files)
 
-#x.to_sql()
-#x.to_json('Datafile.json')
+x.to_sql()
+x.to_json('Datafile.json')
 print(x.df.head())'''
