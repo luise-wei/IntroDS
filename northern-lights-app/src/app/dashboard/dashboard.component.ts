@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { WeatherService } from '../weather.service';
+import { Weather } from '../weather';
 
 @Component({
   selector: 'app-dashboard',
@@ -7,9 +9,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DashboardComponent implements OnInit {
 
-  constructor() { }
+  data: any;
 
-  ngOnInit() {
+  constructor(private weatherService: WeatherService) {
+    this.weatherService.getHostoricalData().subscribe((weather)=>{
+      console.log("got weather data");
+      console.log(weather);
+      this.data = weather;
+    });
   }
+
+  ngOnInit() {}
 
 }
