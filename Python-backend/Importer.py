@@ -208,5 +208,4 @@ weather_files = ['Inari Nellim.csv', 'Rovaniemi Lentoasema.csv', 'Ranua lentoken
 x.import_all(weather_files, space_files)
 
 x.to_sql()
-x.to_json('Datafile.json')
 print(x.df.head())'''
