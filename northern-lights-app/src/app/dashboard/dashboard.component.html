@@ -1,64 +1,70 @@
-<!-- <div class="header">
+<div style="overflow: hidden">
+    <!-- <div class="header">
     <h2>Northern Lights App</h2>
     <h2>NORTHERN LIGHTS APP</h2>
-</div>
-<div class="header2">
+    </div>
+    <div class="header2">
     <h2>Northern Lights App</h2>
     <h2>NORTHERN LIGHTS APP</h2>
-</div> -->
+    </div> -->
 
-<div class="header3">
-    <h2>Want to see Northern Lights?</h2>
-    <!-- <h2>NORTHERN LIGHTS APP</h2> -->
-</div>
+    <div class="header3">
+        <h2>Want to see Northern Lights?</h2>
+        <!-- <h2>NORTHERN LIGHTS APP</h2> -->
+    </div>
 
-<!-- <div class="header4">
+    <!-- <div class="header4">
     <h2>Northern Lights App</h2>
     <h2>NORTHERN LIGHTS APP</h2>
-</div> -->
-<div class="example-card">
-    <mat-card>
-        <mat-card-header>
-            <mat-card-title>Northern Lights are Coming</mat-card-title>
-            <mat-card-subtitle>Aurora Borealis Finland</mat-card-subtitle>
-        </mat-card-header>
-        <img mat-card-image src="../../assets/Aurora_borealis.png" alt="Photo of a Aurora Borealis">
-        <mat-card-content>
-            <p>
-                An aurora (plural: auroras or aurorae), sometimes referred to as polar lights, northern lights
-                (aurora
-                borealis),
-                southern lights (aurora australis), is a natural light display in the Earth's sky, predominantly
-                seen in
-                the
-                high-latitude regions (around the Arctic and Antarctic).
-            </p>
-        </mat-card-content>
-        <mat-card-actions>
-            <button mat-button>VERIFY</button>
-            <button mat-button>SHARE</button>
-        </mat-card-actions>
-    </mat-card>
-</div>
+    </div> -->
+    <div class="example-card">
+        <mat-card>
+            <mat-card-header>
+                <mat-card-title>Northern Lights are Coming</mat-card-title>
+                <mat-card-subtitle>Aurora Borealis Finland</mat-card-subtitle>
+            </mat-card-header>
+            <img mat-card-image src="../../assets/Aurora_borealis.png" alt="Photo of a Aurora Borealis">
+            <mat-card-content>
+                <p>
+                    An aurora, sometimes referred to as polar lights, northern lights
+                    (aurora
+                    borealis),
+                    southern lights (aurora australis), is a natural light display in the Earth's sky, predominantly
+                    seen in
+                    the
+                    high-latitude regions (around the Arctic and Antarctic).
+                </p>
+                <a href="https://en.wikipedia.org/wiki/Aurora" target="View full article" rel="noopener" 
+                    style="color: gray;text-decoration: none">
+                    Wikipedia
+                </a>
+            </mat-card-content>
+            <mat-card-actions class="button">
+                <!--button mat-button>VERIFY</button-->
+                <button mat-raised-button routerLink="/overview" style="background-color: rgba(230, 242, 255,0.2);">Learn More!</button>
+            </mat-card-actions>
+        </mat-card>
+    </div>
 
-<div class="example-card">
-    <mat-card>
-        <mat-card-header>
-            <mat-card-title>Weather of the last days and forcast</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-            <app-line-chart></app-line-chart>
-        </mat-card-content>
-    </mat-card>
-</div>
+    <!-- <div class="example-card">
+        <mat-card>
+            <mat-card-header>
+                <mat-card-title>Weather of the last days and forcast</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <app-line-chart [data]="data"></app-line-chart>
+            </mat-card-content>
+        </mat-card>
+    </div> -->
 
-<div class="example-card">
-    <mat-card>
-        <mat-card-header>
-            <mat-card-title>K Index of the last days and forcast</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-            <app-line-chart></app-line-chart>
-        </mat-card-content>
-    </mat-card>
+    <!-- <div class="example-card">
+        <mat-card>
+            <mat-card-header>
+                <mat-card-title>K Index of the last days and forcast</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <app-line-chart [data]="data"></app-line-chart>
+            </mat-card-content>
+        </mat-card>
+    </div> -->
 </div>

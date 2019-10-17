@@ -1,0 +1,69 @@
+<div class="header-container">
+    <button mat-raised-button routerLink="/"
+        class="back-button">Back</button>
+    <div class="header-text">Northern Lights</div>
+    <div class="selection">
+        <mat-form-field style="padding: 0cm !important;">
+            <mat-label>Closest City</mat-label>
+            <mat-select [(ngModel)]="selectedStation" (ngModelChange)="onCitySelection()">
+                <mat-option *ngFor="let station of stations" [value]="station">
+                    {{station.city}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+</div>
+
+
+<div class="body-container">
+    <div class="plot-card">
+        <mat-card>
+            <mat-card-header>
+                <mat-card-title>Likelihood to see northern lights today</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <app-line-chart *ngIf="data" [data]="data" [labels]="timestamps"></app-line-chart>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div style="width: 22%;">
+        <mat-card>
+            <mat-card-header>
+                <mat-card-title>Map</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div id="map" class="map"></div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>
+
+<div class="forecast-container">
+    <div id="forcast" *ngFor="let cast of forecast" style="
+    padding-left:10px;
+    padding-right:10px;
+    width:22%;" >
+        <mat-card>
+            <mat-card-header>
+                <mat-card-title>
+                    <div >{{cast.day.format("dddd, DD.MM.")}} | <b>{{cast.likelihood}} %</b></div>
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <mat-list>
+                    <mat-list-item>
+                        <mat-icon mat-list-icon>visibility</mat-icon>
+                        <p mat-line>{{cast.visibility}} km</p>
+                    </mat-list-item>
+                    <mat-list-item>
+                        <mat-icon mat-list-icon [ngStyle]="{'color': 'rgba(38,38,38,'+ (cast.clouds/ 8.1) +')'}">cloud
+                        </mat-icon>
+                        <p mat-line>{{cast.clouds}} /8</p>
+                    </mat-list-item>
+                </mat-list>
+
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+</div>
