@@ -21,6 +21,7 @@ class ML():
         print("Import done")
         self.result = self.create_output(self.Importer.df)
         self.RunAll(self.result)
+        self.to_json()
         self.to_database()
 
     ### Linear Regression
@@ -94,6 +95,10 @@ class ML():
         conn.close()
         print("Modelcreation complete")
 
+    def to_json(self):
+        self.result.to_json("result.json")
+        print("Result written")
+
     def create_output(self, df):
         #df[self.Importer.df['Inari Nellim_Cloud amount (1/8)'].isnull()]
         data = []
@@ -124,3 +129,4 @@ class ML():
 
 
 x = ML()
+#x.to_json()

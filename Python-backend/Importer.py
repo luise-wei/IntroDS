@@ -31,6 +31,7 @@ class Importer():
         self.df = self.__load_all_kIndex(k_index_paths, self.df)
         self.df = self.__make_Validation(self.df)
         self.completed = True
+        self.to_json('rawData.json')
 
     def __import_weather(self, path, first=False):
         ''' Import data from a weather station in csv '''
