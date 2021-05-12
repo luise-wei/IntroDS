@@ -22,7 +22,7 @@
     "@angular/platform-browser-dynamic": "~8.2.4",
     "@angular/router": "~8.2.4",
     "angular-osm": "^1.2.2",
-    "chart.js": "^2.8.0",
+    "chart.js": "^2.9.4",
     "cors": "^2.8.5",
     "moment": "^2.24.0",
     "ol": "^6.0.1",
